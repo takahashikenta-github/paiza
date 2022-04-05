@@ -1,0 +1,29 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B020 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int trnasferCnt = in.nextInt();// リンク移動回数
+
+		String page = "";// リンク入力値
+		String[] pageLink = new String[100];// リンク先保存
+		int pos = -1;// リンク内での位置
+
+		for (int i = 0; i <= trnasferCnt; i++) {
+			page = in.nextLine();
+			if (page.startsWith("go")) {// 移動先が更新の場合
+				System.out.println(page.substring(6));
+				pageLink[++pos] = page;// リンク先保存
+			} else if (page.startsWith("use")) {// 移動先が戻る場合
+				System.out.println(pageLink[--pos].substring(6));
+			}
+		}
+
+	}
+
+}
