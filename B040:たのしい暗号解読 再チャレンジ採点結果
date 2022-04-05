@@ -1,0 +1,37 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B040 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int replace = in.nextInt();//置換回数
+		String replaceString = in.next();//文字列
+		String alphabet = "abcdefghijklmnopqrstuvwxyz";
+		String cryptogram;//暗号文
+		String tmp;
+		int index;
+	
+		cryptogram = in.nextLine();
+		cryptogram = in.nextLine();
+		
+		
+		for(int i = 0; i < cryptogram.length(); i++) {
+			tmp = String.valueOf(cryptogram.charAt(i));
+			if(tmp.equals(" ") == true) {
+				System.out.print(" ");
+				continue;
+			}
+			for(int j = 0; j < replace; j++) {
+				index = replaceString.indexOf(tmp);
+				tmp = String.valueOf(alphabet.charAt(index));
+			}
+			System.out.print(tmp);
+		}
+
+	}
+
+}
