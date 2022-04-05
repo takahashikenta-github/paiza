@@ -1,1 +1,62 @@
+package paiza;
 
+import java.util.Scanner;
+
+public class B076 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int type = in.nextInt();// パンの種類
+		int queryCnt = in.nextInt();// クエリの個数
+
+		int[] breadPrice = new int[type];// パンの値段
+		int[] breadStock = new int[type]; // パンの在庫
+
+		// パンの情報設定
+		for (int i = 0; i < type; i++) {
+			breadPrice[i] = in.nextInt();
+			breadStock[i] = in.nextInt();
+		}
+
+		String status = "";// 作業ステータス
+		int[] buyBreadCnt = new int[type];// 各パンの購入数格納
+		int bakeBreadCnt;// 焼き上げパン個数
+		int[] tmpStock = new int[type];// パンの在庫格納一時変数
+		int charge = 0;// 購入金額
+
+		for (int row = 0; row < queryCnt; row++) {
+			status = in.next();
+			if (status.equals("buy")) {// パン購入の場合
+				for (int i = 0; i < type; i++) {
+					buyBreadCnt[i] = in.nextInt();
+				}
+				for (int breadPos = 0; breadPos < type; breadPos++) {
+					if (breadStock[breadPos] - buyBreadCnt[breadPos] >= 0) {
+						tmpStock[breadPos] = breadStock[breadPos] - buyBreadCnt[breadPos];
+						charge += breadPrice[breadPos] * buyBreadCnt[breadPos];// 購入金額更新
+						if (breadPos == type - 1) {// 最後のパンの種類までいった場合
+							breadStock = tmpStock.clone();// 仮の在庫情報を反映する
+							System.out.println(charge);
+							charge = 0;// 購入金額初期化
+						}
+					} else {// パンの在庫がなかった場合
+						System.out.println("-1");
+						charge = 0;// 購入金額初期化
+						break;
+					}
+
+				}
+
+			} else if (status.equals("bake")) {// パン焼き上げの場合
+				for (int breadPos = 0; breadPos < type; breadPos++) {
+					bakeBreadCnt = in.nextInt();
+					breadStock[breadPos] += bakeBreadCnt;// 在庫更新
+				}
+			}
+		}
+
+	}
+
+}
