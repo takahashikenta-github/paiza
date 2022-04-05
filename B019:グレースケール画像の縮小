@@ -1,0 +1,54 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B019 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int size = in.nextInt();//画像サイズ
+		int reducedSize = in.nextInt();//画像縮小サイズ
+		int[][] pixel = new int[size][size];//ピクセル格納
+		
+		//画像のピクセル入力
+		for(int row = 0; row < size; row++) {
+			for(int i = 0; i < size; i++) {
+				pixel[row][i] = in.nextInt();
+			}
+		}
+		
+		int pixelSum = 0;//ピクセルの合計
+		int[][] reducedPixel = new int[size/reducedSize][size/reducedSize];//縮小サイズのピクセル格納
+				
+		for(int row = 0; row < size/reducedSize; row++) {
+			for(int i = 0; i < size/reducedSize; i++) {
+				for(int reducedRow = reducedSize*row; reducedRow < reducedSize*(row+1); reducedRow++) {
+					for(int reducedI = reducedSize*i; reducedI < reducedSize*(i+1); reducedI++) {
+						pixelSum+=pixel[reducedRow][reducedI];
+					}
+				}
+				reducedPixel[row][i] = (int)pixelSum/(reducedSize*reducedSize);
+				pixelSum = 0;				
+			}
+		}
+		
+		int cnt = 0;
+		for(int[] ary : reducedPixel) {
+			for(int n : ary) {
+				cnt++;
+				if(cnt == ary.length) {
+					System.out.print(n);
+				}
+				else {
+					System.out.print(n + " ");					
+				}
+			}
+			System.out.println();
+			cnt=0;
+		}
+
+	}
+
+}
