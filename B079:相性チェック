@@ -1,0 +1,57 @@
+package paiza;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class B079 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		String inputString1 = in.next();
+		String inputString2 = in.next();
+
+		int ans1 = checkCompatibility(inputString1, inputString2);
+		int ans2 = checkCompatibility(inputString2, inputString1);
+
+		System.out.println(Math.max(ans1, ans2));
+		
+	}
+
+	// 相性チェックメソッド
+
+	private static int checkCompatibility(String name1, String name2) {
+
+		String alphabetIndex = " abcdefghijklmnopqrstuvwxyz";// 文字の重み算出用
+		String name = name1 + name2;// 入力値2つから名前取得
+		List<Integer> nameValue = new ArrayList<>();// 文字の重みの合計を格納
+		ArrayList<Integer> tmpNameValue = new ArrayList<>();// 文字の重みの合計を格納一時変数リスト
+		int tmp1;// 文字の重み取得一時変数
+		int tmp2;// 文字の重み取得一時変数
+		int sum;// 文字の重みの合計
+
+		for (int i = 0; i < name.length(); i++) {// 各文字の重みを算出
+			nameValue.add(alphabetIndex.indexOf(name.charAt(i)));
+		}
+
+		while (nameValue.size() != 1) {// 文字の重みが1つになるまで繰り返す
+			tmp1 = nameValue.get(0);
+			for (int i = 1; i < nameValue.size(); i++) {
+				tmp2 = nameValue.get(i);
+				sum = tmp1 + tmp2;
+				if (sum >= 101) {// 文字の重みの合計が101を越えた場合
+					sum -= 101;
+				}
+				tmpNameValue.add(sum);
+				tmp1 = tmp2;
+			}
+			nameValue = (List<Integer>) tmpNameValue.clone();
+			tmpNameValue.clear();
+		}
+
+		return nameValue.get(0);
+	}
+	
+}
