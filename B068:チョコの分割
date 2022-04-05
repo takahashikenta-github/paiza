@@ -1,0 +1,86 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B068 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+		
+		//チョコレート大きさ設定
+		
+		String input1 = in.nextLine();
+		String[] tmp1 = input1.split(" ");
+		int[] data = new int[2];
+		
+		for(int i = 0; i < tmp1.length; i++) {
+			data[i] = Integer.parseInt(tmp1[i]);
+		}
+		
+		//糖度設定
+		
+		int[][] chokoSugar = new int[data[0]][data[1]];
+		
+		for(int i = 0; i < data[0]; i++) {
+			String input2 = in.nextLine();
+			String[] temp2 = input2.split(" ");
+			
+			for(int j = 0 ; j < temp2.length; j++) {
+				chokoSugar[i][j] = Integer.parseInt(temp2[j]);
+			}
+		}
+		
+		//チョコレート分割設定
+		
+		char [][] judge = new char[data[0]][data[1]];
+		int sum = 0;
+		int avg = 0;
+		int AliceHave = 0;
+		int BobHave = 0;
+		String flg = "Yes";
+		
+		for(int i = 0; i < data[0]; i++) {
+			
+			for(int num : chokoSugar[i]) { //行単位の糖度の総計を求める
+				sum+=num;
+			}
+			
+			avg = sum/2;
+			
+			for(int j = 0; j < chokoSugar[i].length; j++) {
+				
+				if(AliceHave < avg) {
+					AliceHave+=chokoSugar[i][j];
+					judge[i][j] = 'A';
+				}
+				else {
+					BobHave+=chokoSugar[i][j];
+					judge[i][j] = 'B';
+				}
+			}
+			
+			if(AliceHave != BobHave) {
+				flg = "No";
+				break;
+			}
+			
+		}
+		
+		//結果の出力
+		
+		System.out.println(flg);
+		
+		if(flg == "Yes") {
+			for(int i = 0; i < judge.length; i++) {
+				for(int j = 0; j < judge[i].length; j++) {
+					System.out.print(judge[i][j]);
+				}
+				System.out.println("");
+			}
+		}
+	
+		
+	}
+
+}
