@@ -1,0 +1,69 @@
+package paiza;
+
+import java.util.Map;
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class B092 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int height = in.nextInt();// 高さ
+		int width = in.nextInt();// 幅
+		int savePointCnt = in.nextInt();// セーブポイントの数
+		String input;// ステージ1列入力
+		char[][] stage = new char[height][width];// ステージ1文字格納
+		int posHeight = 0;// 現在地高さ
+		int posWidth = 0;// 現在地幅
+
+		for (int row = 0; row < height; row++) {
+			input = in.next();
+			for (int i = 0; i < width; i++) {
+				if (input.charAt(i) == 'N') {//現在地の場合
+					posHeight = row;
+					posWidth = i;
+				}
+				stage[row][i] = input.charAt(i);
+			}
+		}
+
+		int tmpX;
+		int tmpY;
+		int min = 999999;
+		Map<Character, Integer> distance = new TreeMap<>();
+
+		for (int row = 0; row < height; row++) {
+			for (int i = 0; i < width; i++) {
+				if (stage[row][i] != '#' && stage[row][i] != 'N') {
+					tmpX = Math.abs(posWidth - i);
+					tmpY = Math.abs(posHeight - row);
+					if (min > tmpX + tmpY) {//最小値更新
+						min = tmpX + tmpY;
+					}
+					distance.put(stage[row][i], tmpX + tmpY);
+				}
+			}
+		}
+
+		int cnt = 0;
+
+		for (Map.Entry<Character, Integer> s : distance.entrySet()) {
+			if (s.getValue() == min) {
+				cnt++;
+			}
+		}
+
+		System.out.println(cnt);
+
+		for (Map.Entry<Character, Integer> s : distance.entrySet()) {
+			if (s.getValue() == min) {
+				System.out.println(s.getKey());
+			}
+		}
+
+		
+	}
+
+}
