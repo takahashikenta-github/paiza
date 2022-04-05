@@ -1,0 +1,77 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B073 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int tree = in.nextInt();
+		int safeLine = in.nextInt();
+
+		// 木の情報設定
+
+		int[] treeInfo = new int[tree];
+
+		for (int i = 0; i < tree; i++) {
+			treeInfo[i] = in.nextInt();
+		}
+
+		// 区間設定
+
+		int inputSection = in.nextInt();
+		int[][] section = new int[inputSection][2];
+
+		for (int i = 0; i < inputSection; i++) {
+			section[i][0] = in.nextInt();
+			section[i][1] = in.nextInt();
+		}
+
+		// 区間の明るさ設定
+
+		int treeLight = 0;
+		double treeLightAvg = 0;
+		int cnt = 0;
+		int gap = 0;
+
+		for (int i = 0; i < inputSection; i++) {
+
+			for (int j = section[i][0] - 1; j < section[i][1]; j++) {
+				treeLight += treeInfo[j];
+				cnt++;
+			}
+
+			treeLightAvg = treeLight / cnt;
+
+			if (treeLightAvg < safeLine) {
+
+				gap = safeLine - (int) treeLightAvg;
+
+				for (int j = section[i][0] - 1; j < section[i][1]; j++) {
+					treeInfo[j] += gap;
+				}
+			}
+			
+			treeLight = 0;
+			cnt = 0;
+		}
+
+		// 結果出力
+
+		for (int i = 0; i < tree; i++) {
+
+			if (i == tree - 1) {
+				System.out.println(treeInfo[i]);
+				break;
+			}
+			System.out.print(treeInfo[i] + " ");
+		}
+
+		System.out.println("");
+
+
+	}
+
+}
