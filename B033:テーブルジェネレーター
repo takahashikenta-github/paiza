@@ -1,0 +1,84 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B033 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		int headingCnt = in.nextInt();//見出しの数入力
+		String[] heading = new String[headingCnt];//見出しデータ格納
+		
+		//見出し入力
+		
+		for(int i = 0; i < headingCnt; i++) {
+			heading[i] = in.next();
+		}
+	
+		int dataCnt = in.nextInt();//データの数入力
+		String[][] data = new String[dataCnt][headingCnt];//データ格納
+		
+		//データ入力
+		
+		for(int dataRow = 0; dataRow < dataCnt; dataRow++) {
+			for(int i = 0; i < headingCnt; i++) {
+				data[dataRow][i] = in.next();
+			}
+		}
+		
+		int tmpLength;//データと見出しの最大値格納一時変数
+		int[] space = new int[headingCnt];//各見出しに対応するスペースが必要な長さ格納
+		
+		//必要なスペース計算
+		
+		for(int headingRow = 0; headingRow < headingCnt; headingRow++) {
+			tmpLength = heading[headingRow].length();//見出しの長さで最大値を初期化
+			for(int i = 0; i < dataCnt; i++) {
+				if(data[i][headingRow].length() > tmpLength) {//見出しの長さよりデータの方が長い場合
+					tmpLength = data[i][headingRow].length();//最大値更新
+				}
+			}
+			space[headingRow] = tmpLength + 2;//前・後ろに半角スペースがいるため＋２
+		}
+		
+		//出力処理
+		
+		for(int headingRow = 0; headingRow < headingCnt; headingRow++) {
+			System.out.print("| ");
+			System.out.print(heading[headingRow]);
+			
+			for(int strLength = heading[headingRow].length() + 1; strLength < space[headingRow]; strLength++) {
+				System.out.print(" ");
+			}
+		}
+		
+		System.out.print("|");
+		System.out.println();
+		
+		for(int spaceRow = 0; spaceRow < headingCnt; spaceRow++) {
+			System.out.print("|");
+		
+			for(int strLength = 0; strLength < space[spaceRow]; strLength++) {
+				System.out.print("-");
+			}
+		}
+		
+		System.out.print("|");
+		System.out.println();
+		
+		for(int dataRow = 0; dataRow < dataCnt; dataRow++) {
+			for(int i = 0; i < headingCnt; i++) {
+				System.out.print("| ");
+				System.out.print(data[dataRow][i]);
+				for(int strLength = data[dataRow][i].length() + 1; strLength < space[i]; strLength++) {
+					System.out.print(" ");
+				}
+			}
+			System.out.println("|");
+		}
+
+	}
+
+}
