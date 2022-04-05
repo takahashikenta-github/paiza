@@ -1,0 +1,97 @@
+import java.util.Scanner;
+
+public class Main {
+	
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+
+		int flame = in.nextInt();// フレーム数入力
+		int pin = in.nextInt();// ピン数入力
+		int throwBall = in.nextInt();// ボール投げた回数
+
+		// ピン倒した本数設定
+
+		int[] brokenPin = new int[throwBall];// 1投ごとの倒したピンをintで格納
+		String tmp;// 倒したピンの入力値をStringで受け取る一時変数
+
+		for (int i = 0; i < throwBall; i++) {
+			tmp = in.next();
+			if (tmp.equals("G") == true) {// ガーターの場合は0ピンとして判定する
+				brokenPin[i] = 0;
+			} else {
+				brokenPin[i] = Integer.parseInt(tmp);// Stringをintに変換して格納
+			}
+		}
+
+		// スコア設定
+
+		int[] scoreBoard = new int[flame + 1];// スコアボード
+		int throwStatus = 0;// 1=1投目 2=2投目
+		int flameCnt = 1; // フレーム数カウント
+		int brokenPinSum = 0;// 倒したピン合計
+
+		for (int i = 0; i < throwBall; i++) {// ボール投げた数だけ繰り返す
+
+			brokenPinSum += brokenPin[i];// フレームごとに倒したピンを合計していく
+
+			// 最終フレーム処理
+
+			if (flameCnt == flame) {// 最終フレームの場合
+				if (brokenPinSum == pin) {// 最終フレームで全倒し
+					if (throwStatus % 2 + 1 == 1) {// ストライクの場合
+						if (brokenPin[i + 1] == pin) {// ストライク&&スペア
+							scoreBoard[flameCnt] = pin + 2 * brokenPin[i + 1] + 3 * brokenPin[i + 2];
+						} else {// ストライク&&それ以外
+							scoreBoard[flameCnt] = pin + 2 * brokenPin[i + 1] + 2 * brokenPin[i + 2];
+						}
+					} else {// スペアの場合
+						scoreBoard[flameCnt] = pin + 2 * brokenPin[i + 1];
+					}
+					break;
+				} else {
+					if (throwStatus % 2 + 1 == 2) {// 2投目の場合
+						scoreBoard[flameCnt] = brokenPinSum;
+						break;
+					}
+					throwStatus++;
+					continue;
+				}
+			}
+
+			// 最終フレーム以外の処理
+
+			if (brokenPinSum == pin) {// 全倒しの場合
+				if (throwStatus % 2 + 1 == 1) {// ストライクの場合
+					scoreBoard[flameCnt] = pin + brokenPin[i + 1] + brokenPin[i + 2];
+				} else {// スペアの場合
+					scoreBoard[flameCnt] = pin + brokenPin[i + 1];
+					throwStatus++;// 次投げるときは1投目
+				}
+				flameCnt++;// 次のフレームに更新
+				brokenPinSum = 0;// 倒したピン初期化
+
+			} else {
+				if (throwStatus % 2 + 1 == 2) {// 2投目の場合
+					scoreBoard[flameCnt] = brokenPinSum;
+					flameCnt++;// 次のフレームに更新
+					brokenPinSum = 0;// 倒したピン初期化
+				}
+				throwStatus++;
+			}
+		}
+
+		// スコア計算設定
+
+		int score = 0;
+
+		for (int val : scoreBoard) {
+			score += val;
+		}
+
+		// 出力処理
+
+		System.out.println(score);
+
+	}
+}
