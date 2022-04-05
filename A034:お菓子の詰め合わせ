@@ -1,0 +1,114 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Collections;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+
+		int kindSweets = in.nextInt();// お菓子の種類
+		int haveMoney = in.nextInt();// 所持金
+
+		// お菓子金額入力
+
+		List priceSweets = new ArrayList<Integer>();// お菓子の金額格納
+		int tmp1;// お菓子金額入力の一時変数
+
+		for (int i = 0; i < kindSweets; i++) {
+			tmp1 = in.nextInt();
+			priceSweets.add(tmp1);
+		}
+
+		// お菓子を最大個数選択する設定
+
+		int sum = 0;// お菓子総額計算用
+		int cnt = 0;// 削除回数カウント
+		List<Integer> tmpPriceSweets = new ArrayList<>(priceSweets);// お菓子の価格を削除したりするようリスト
+		List<List<Integer>> set = new ArrayList<>();// お菓子の組み合わせを金額で格納
+		int tmp2;// お菓子金額リストの最高値の添え字格納一時変数
+
+		while (true) {// お菓子金額リスト(tmpPriceSweets)の総計が所持金以下になるまで無限ループ
+
+			for (int i = 0; i < tmpPriceSweets.size(); i++) {// お菓子金額リストにある総金額算出
+				sum += tmpPriceSweets.get(i);
+			}
+
+			if (sum <= haveMoney) {// お菓子の合計金額が所持金以下になった場合
+				set = combination(priceSweets, kindSweets - cnt);// 指定した個数の組み合わせ全通り取得
+				break;
+			} else {// お菓子の中で最高値の物を順次取り出す
+				sum = 0;// お菓子金額総計初期化
+				cnt++;// お菓子リストから最高値を削除した回数更新
+				tmp2 = tmpPriceSweets.indexOf(Collections.max(tmpPriceSweets));// お菓子リスト内の最高値に添え字取得
+				tmpPriceSweets.remove(tmp2);// お菓子リストから最高値削除
+			}
+		}
+
+		// お菓子の組み合わせからお釣りを設定
+
+		int change;// お釣り金額
+		List changeList = new ArrayList<Integer>();// 各お菓子の組み合わせのお釣り金額格納
+		List tmp3 = new ArrayList<Integer>();// お菓子の組み合わせリストの一時変数
+		sum = 0;// お菓子金額総計初期化
+
+		if (cnt == kindSweets - 1) {// 組み合わせ処理でエラーが発生する(リストの中から1つを選択する)場合
+			for (int i = 0; i < kindSweets; i++) {
+				change = haveMoney - (Integer) priceSweets.get(i);// お釣り算出
+				if (change >= 0) {// お釣りが0円以上ならお釣りリストに格納
+					changeList.add(change);
+				}
+				change = 0;
+			}
+		} else {
+			for (int i = 0; i < set.size(); i++) {
+				tmp3 = set.get(i);// setから1つのお菓子の組み合わせを取り出す
+				for (int j = 0; j < tmp3.size(); j++) {
+					sum += (Integer) tmp3.get(j);// 各組み合わせのお菓子の金額総計算出
+				}
+				change = haveMoney - sum;// お釣り算出
+				if (change >= 0) {// お釣りが0円以上ならお釣りリストに格納
+					changeList.add(change);
+				}
+				sum = 0;
+			}
+		}
+
+		// 結果出力
+
+		System.out.println(Collections.min(changeList));
+
+	}
+
+	// 組み合わせ処理 リストの中から指定数個選ぶ (ネットから引用 要素の中から1つだけ選ぶ場合エラーが出るらしい)
+
+	public static List<List<Integer>> combination(List list, int count) {
+		List ret = new ArrayList<List<Integer>>();
+		for (int i = 0; i < list.size(); i++) {
+			if (i + count > list.size()) {
+				break;
+			}
+			Stack stack = new Stack<Integer>();
+			stack.push(list.get(i));
+			_combination(ret, list, stack, i + 1, count);
+		}
+		return ret;
+	}
+
+	private static void _combination(List ret, List list, Stack stack, int index, int count) {
+		for (int i = index; i < list.size(); i++) {
+			stack.push(list.get(i));
+			if (stack.size() == count) {
+				ret.add(Arrays.asList(stack.toArray()));
+				stack.pop();
+				continue;
+			}
+			_combination(ret, list, stack, i + 1, count);
+			stack.pop();
+		}
+	}
+}
