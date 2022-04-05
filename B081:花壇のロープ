@@ -1,0 +1,54 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B081 {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+
+		int height = in.nextInt();// 花壇の高さ
+		int width = in.nextInt();// 花壇の幅
+		String tmp = "";
+		char[][] flowerBed = new char[height + 2][width + 2];// 設定した花壇の大きさより1大きいサイズ
+
+		// '.'で初期化
+		for (int row = 0; row < height + 2; row++) {
+			for (int i = 0; i < width + 2; i++) {
+				flowerBed[row][i] = '.';
+			}
+		}
+		// 花壇の設定
+		for (int row = 1; row < height + 1; row++) {
+			tmp = in.next();
+			for (int i = 1; i < width + 1; i++) {
+				flowerBed[row][i] = tmp.charAt(i - 1);
+			}
+		}
+
+		int ropeLength = 0;// ロープの長さ
+
+		for (int row = 1; row < height + 1; row++) {
+			for (int i = 1; i < width + 1; i++) {
+				if (flowerBed[row][i] == '#') {// 花の場合
+					if (flowerBed[row - 1][i] == '.') {// 花の上のマスが土の場合
+						ropeLength++;
+					}
+					if (flowerBed[row + 1][i] == '.') {// 花の下のマスが土の場合
+						ropeLength++;
+					}
+					if (flowerBed[row][i - 1] == '.') {// 花の左のマスが土の場合
+						ropeLength++;
+					}
+					if (flowerBed[row][i + 1] == '.') {// 花の右のマスが土の場合
+						ropeLength++;
+					}
+				}
+			}
+		}
+
+		System.out.println(ropeLength);
+	}
+
+}
