@@ -1,0 +1,118 @@
+package paiza;
+
+import java.util.Scanner;
+
+public class B034 {
+
+	public static void main(String[] args) {
+		
+		Scanner in = new Scanner(System.in);
+
+		// 座標設定
+
+		int X = in.nextInt();
+		int Y = in.nextInt();
+		
+		int[] robotInfo = new int[4]; // 添え字に対して 前 右 後 左
+
+		// ロボットの移動距離設定
+
+		for (int i = 0; i < robotInfo.length; i++) {
+			robotInfo[i] = in.nextInt();
+		}
+
+		int order = in.nextInt(); // ロボットの命令回数
+		char whatDo; // ロボットが何するか t or m
+		char direction; // ロボットに対して方向指定 F R B L
+		int robotStatus = 0; //ロボットの向き
+
+		for (int i = 0; i < order; i++) {
+
+			whatDo = in.next().charAt(0);
+			direction = in.next().charAt(0);
+			
+
+			if (whatDo == 'm') {
+				
+				if(robotStatus == 0) {	
+					if(direction == 'F') {
+						Y+=robotInfo[0];
+					}
+					else if(direction == 'R') {
+						X+=robotInfo[1];
+					}
+					else if(direction == 'B') {
+						Y-=robotInfo[2];
+					}
+					else {
+						X-=robotInfo[3];
+					}
+				}
+				
+				else if(robotStatus == 1) {	
+					if(direction == 'F') {
+						X+=robotInfo[0];
+					}
+					else if(direction == 'R') {
+						Y-=robotInfo[1];
+					}
+					else if(direction == 'B') {
+						X-=robotInfo[2];
+					}
+					else {
+						Y+=robotInfo[3];
+					}
+				}
+				
+				else if(robotStatus == 2) {	
+					if(direction == 'F') {
+						Y-=robotInfo[0];
+					}
+					else if(direction == 'R') {
+						X-=robotInfo[1];
+					}
+					else if(direction == 'B') {
+						Y+=robotInfo[2];
+					}
+					else {
+						X+=robotInfo[3];
+					}
+				}	
+				else {	
+					if(direction == 'F') {
+						X-=robotInfo[0];
+					}
+					else if(direction == 'R') {
+						Y+=robotInfo[1];
+					}
+					else if(direction == 'B') {
+						X+=robotInfo[2];
+					}
+					else {
+						Y-=robotInfo[3];
+					}
+				}
+			} else {
+				
+				if(direction == 'R') {
+					robotStatus = ++robotStatus%4;
+				}
+				else if(direction == 'L') {
+					robotStatus = --robotStatus%4;
+					if(robotStatus == -1) {
+						robotStatus = 3;
+					}
+				}
+				else {
+					robotStatus = (robotStatus+2)%4;
+				}
+			}
+		}
+		
+		//結果出力
+		
+		System.out.println(X + " " + Y);
+
+	}
+
+}
