@@ -1,0 +1,65 @@
+import java.util.Scanner;
+import java.util.TreeMap;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+
+		// 基準点のX座標,Y座標の設定
+
+		int coordinateX = in.nextInt();// 基準点X座標入力
+		int coordinateY = in.nextInt();// 基準点Y座標入力
+
+		// 近い点の個数・既知の個数の設定
+
+		int nearPointCount = in.nextInt();// 基準値からいくつ既知の点を使うか入力
+		int knownPointCount = in.nextInt();// 既知の点はいくつあるか入力
+
+		// 既知の点の座標・地価設定
+
+		int[] knownPointCoordinateX = new int[knownPointCount];// 既知の点のX座標格納
+		int[] knownPointCoordinateY = new int[knownPointCount];// 既知の点のY座標格納
+		int[] landPrice = new int[knownPointCount];// 既知の点の地価格納
+
+		for (int i = 0; i < knownPointCount; i++) {
+			knownPointCoordinateX[i] = in.nextInt();// X座標入力
+			knownPointCoordinateY[i] = in.nextInt();// Ｙ座標入力
+			landPrice[i] = in.nextInt();// 地価入力
+		}
+
+		// 基準値と既知との距離計算設定
+
+		TreeMap<Double, Integer> distanceLandPrice = new TreeMap<>(); // 基準値との距離ををkeyに地価をvalueのTreeMap
+		double tmp = 0;// 基準値との距離の一時変数
+
+		for (int i = 0; i < knownPointCount; i++) {
+
+			// 距離計算
+			tmp = Math.sqrt(Math.pow(coordinateX - knownPointCoordinateX[i], 2)
+					+ Math.pow(coordinateY - knownPointCoordinateY[i], 2));
+
+			distanceLandPrice.put(tmp, landPrice[i]);
+		}
+
+		// 基準点の地価計算設定
+
+		double sumLandPrice = 0;// 地価合計 四捨五入するためdouble型で扱う
+		int cnt = 0;// 既知の点をいくつ使ったかカウント
+
+		for (double key : distanceLandPrice.keySet()) {// 昇順にソートされたkeyから取り出す = 基準値との距離が短いものから
+
+			if (cnt == nearPointCount) {
+				break;
+			}
+			sumLandPrice += distanceLandPrice.get(key);// 地価の合計更新
+			cnt++;
+		}
+
+		// 結果出力
+
+		System.out.println(Math.round(sumLandPrice / nearPointCount));
+
+	}
+}
