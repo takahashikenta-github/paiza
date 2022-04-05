@@ -1,0 +1,101 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner in = new Scanner(System.in);
+
+		// ケーキの高さと幅の設定
+
+		int height = in.nextInt();// 高さ
+		int width = in.nextInt();// 幅
+
+		// ケーキの生クリーム・イチゴの設定
+
+		char[][] cake = new char[height][width];// ケーキ面積初期化
+
+		for (int col = 0; col < height; col++) {
+
+			String inputData = in.next();// 入力値
+
+			for (int row = 0; row < width; row++) {
+				cake[col][row] = inputData.charAt(row);// 入力値を1単語ずつ格納
+			}
+		}
+
+		// 不公平度の計算
+
+		ArrayList<Integer> tmp1 = new ArrayList<>(Arrays.asList(0, 0, 0, 0));// 各添え字は４等分したケーキの満足度に値する
+		ArrayList<Integer> unfair = new ArrayList<>();// 切り方ごとの不公平度に値する
+		int cnt = 0;// イチゴの個数カウント
+		int pos = 0;// ケーキを切り分けた順序
+
+		for (int i = 1; i < height; i++) {
+
+			for (int j = 1; j < width; j++) {
+
+				// ケーキの面積で初期化
+
+				tmp1.set(0, i * j);// 左上ケーキ面積
+				tmp1.set(1, i * (width - j));// 右上ケーキ面積
+				tmp1.set(2, (height - i) * j);// 左下ケーキ面積
+				tmp1.set(3, (height - i) * (width - j));// 右下ケーキ面積
+
+				for (int x = 0; x < 4; x++) {// 各ケーキに対してxが０（左上）１（右上）２（左下）３（右下）
+
+					if (x == 0) {// ケーキ左上の場合
+						for (int n = 0; n < i; n++) {
+							for (int m = 0; m < j; m++) {
+								if (cake[n][m] == '@') {
+									cnt++;
+								}
+							}
+						}
+					} else if (x == 1) {// ケーキ右上の場合
+						for (int n = 0; n < i; n++) {
+							for (int m = j; m < width; m++) {
+								if (cake[n][m] == '@') {
+									cnt++;
+								}
+							}
+						}
+					} else if (x == 2) {// ケーキ左下の場合
+						for (int n = i; n < height; n++) {
+							for (int m = 0; m < j; m++) {
+								if (cake[n][m] == '@') {
+									cnt++;
+								}
+							}
+						}
+					} else {// ケーキ右下の場合
+						for (int n = i; n < height; n++) {
+							for (int m = j; m < width; m++) {
+								if (cake[n][m] == '@') {
+									cnt++;
+								}
+							}
+						}
+					}
+
+					tmp1.set(x, (int) Math.pow(cnt, 2) + tmp1.get(x));// イチゴの個数の２乗とケーキの面積の合計に更新
+					cnt = 0;// イチゴの個数初期化
+				}
+
+				unfair.add(pos, Collections.max(tmp1) - Collections.min(tmp1));// ケーキを切り分けた時の不公平度を計算
+				pos++;// 切り分けた順序更新
+			}
+		}
+
+		// 結果出力
+
+		int tmp2 = Collections.min(unfair);// 不公平度が最小のものを取得
+		int index = unfair.indexOf(tmp2);// 不公平度が最小のものの添え字を取得＝ケーキを切り分けた順序取得
+
+		System.out.println((1 + index / (width - 1)) + " " + (1 + index % (width - 1)));
+
+	}
+}
